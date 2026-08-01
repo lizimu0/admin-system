@@ -1,0 +1,11 @@
+fastapi
+uvicorn[standard]
+sqlalchemy
+pydantic
+pydantic-settings
+PyJWT
+passlib[bcrypt]
+bcrypt<4.1
+python-multipart
+pillow
+openpyxl
