@@ -1,6 +1,22 @@
+<p align="center">
+  <img src="docs/banner.svg" alt="后台管理系统" width="640">
+</p>
+
+<p align="center">
+  <a href="https://github.com/lizimu0/admin-system"><img src="https://img.shields.io/github/stars/lizimu0/admin-system?style=flat&label=Stars"></a>
+  <img src="https://img.shields.io/badge/Vue-3.5-42b883.svg">
+  <img src="https://img.shields.io/badge/Element%20Plus-2.8-409eff.svg">
+  <img src="https://img.shields.io/badge/Vite-5.x-646cff.svg">
+  <img src="https://img.shields.io/badge/FastAPI-0.1xx-009688.svg">
+  <img src="https://img.shields.io/badge/Python-3.12-3776ab.svg">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-yellow.svg"></a>
+</p>
+
 # 后台管理系统
 
 基于 **Vue 3 + Element Plus + Pinia + ECharts**(前端)与 **FastAPI + SQLAlchemy + SQLite + JWT**(后端)的全栈后台管理系统,开箱即用。
+
+> 📄 **生产部署请参阅 [部署指南](docs/部署指南.md)**,含 Nginx 反向代理、systemd 守护、HTTPS 等完整步骤。
 
 ## 功能
 
@@ -88,3 +104,7 @@ npm run dev
 | `log:view` | 查看操作日志 / 登录日志 |
 
 新增业务模块时,在角色管理页的权限树中补充对应权限码,并在后端路由的写接口上加 `require_permission("xxx:add")` 即可。
+
+## 许可证
+
+[MIT License](LICENSE) © 2026 [lizimu0](https://github.com/lizimu0)
