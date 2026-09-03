@@ -1,6 +1,12 @@
 """演示数据初始化脚本: python -m app.seed
 幂等:已存在的数据不会重复创建。
+
+初始密码策略:
+- 优先读取环境变量 ADMIN_INITIAL_PASSWORD / TEST_INITIAL_PASSWORD(推荐在 .env 中设置);
+- 未配置时随机生成并仅在创建时打印一次,避免仓库文档中的固定密码成为生产环境默认凭据。
 """
+import os
+import secrets
 import sys
 
 # Windows 控制台默认 GBK,强制 UTF-8 以支持 emoji/中文输出
@@ -23,6 +29,14 @@ USER_ROLE_PERMISSIONS = [
 ]
 
 PRODUCT_CATEGORIES = ["电子产品", "办公用品", "生活百货", "食品饮料"]
+
+
+def initial_password(env_name: str) -> str:
+    """从环境变量读取初始密码,未配置则随机生成 12 位密码。"""
+    value = os.getenv(env_name, "").strip()
+    if value:
+        return value
+    return secrets.token_urlsafe(9)
 
 
 def run():
@@ -52,26 +66,31 @@ def run():
         db.commit()
 
         # --- 账号 ---
+        created: list[tuple[str, str]] = []
+        admin_password = initial_password("ADMIN_INITIAL_PASSWORD")
         if not db.query(models.User).filter_by(username="admin").first():
             db.add(
                 models.User(
                     username="admin",
-                    password=hash_password("admin123"),
+                    password=hash_password(admin_password),
                     nickname="管理员",
                     email="admin@example.com",
                     role_id=admin_role.id,
                 )
             )
+            created.append(("admin", admin_password))
+        test_password = initial_password("TEST_INITIAL_PASSWORD")
         if not db.query(models.User).filter_by(username="test").first():
             db.add(
                 models.User(
                     username="test",
-                    password=hash_password("test123"),
+                    password=hash_password(test_password),
                     nickname="测试用户",
                     email="test@example.com",
                     role_id=user_role.id,
                 )
             )
+            created.append(("test", test_password))
         db.commit()
 
         # --- 演示商品 ---
@@ -90,8 +109,14 @@ def run():
             db.commit()
 
         print("✅ 种子数据初始化完成")
-        print(f"   管理员账号: admin / admin123")
-        print(f"   普通用户:   test / test123")
+        if created:
+            print("   以下账号为本次新建,初始密码仅在本次输出(请立即保存或登录后修改):")
+            for username, password in created:
+                print(f"     {username} / {password}")
+            if not os.getenv("ADMIN_INITIAL_PASSWORD"):
+                print("   提示: 在 backend/.env 中设置 ADMIN_INITIAL_PASSWORD / TEST_INITIAL_PASSWORD 可固定初始密码")
+        else:
+            print("   账号已存在,初始密码保持不变")
     finally:
         db.close()
 
