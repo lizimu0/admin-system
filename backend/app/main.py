@@ -6,7 +6,12 @@ from .middleware import operation_log_middleware
 from .migrations import run_migrations
 from .routers import auth, dashboard, logs, products, roles, users
 
-app = FastAPI(title="后台管理系统 API", version="2.0.0")
+# Swagger 文档开关:生产环境在 .env 设 DOCS_ENABLED=false 关闭 /docs、/redoc 与 openapi.json 暴露面
+_docs = {"docs_url": "/docs", "redoc_url": "/redoc", "openapi_url": "/openapi.json"}
+if not settings.DOCS_ENABLED:
+    _docs = {"docs_url": None, "redoc_url": None, "openapi_url": None}
+
+app = FastAPI(title="后台管理系统 API", version="2.0.0", **_docs)
 
 # 开发环境允许前端跨域
 app.add_middleware(

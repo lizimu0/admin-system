@@ -1,11 +1,13 @@
-fastapi
-uvicorn[standard]
-sqlalchemy
-pydantic
-pydantic-settings
-PyJWT
-passlib[bcrypt]
-bcrypt<4.1
-python-multipart
-pillow
-openpyxl
+# 锁定版本保证构建可复现;升级时先在测试环境验证兼容性。
+# 生成方式: pip freeze | grep -E "(fastapi|uvicorn|...)" 对照本清单逐项更新。
+fastapi==0.141.1
+uvicorn[standard]==0.52.4
+sqlalchemy==2.0.52
+pydantic==2.13.5
+pydantic-settings==2.15.0
+PyJWT==2.13.0
+passlib[bcrypt]==1.7.4
+bcrypt==4.0.1  # passlib 1.7.4 与 bcrypt>=4.1 不兼容,保持 4.0.x
+pillow==12.3.0
+openpyxl==3.1.5
+# python-multipart 已移除:全后端无表单/文件上传端点,属未使用的冗余依赖
