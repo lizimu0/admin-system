@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Generic, List, Optional, TypeVar
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 T = TypeVar("T")
 
@@ -112,7 +112,8 @@ class UserOut(BaseModel):
 
 class UserCreate(BaseModel):
     username: str
-    password: str
+    # 创建用户与服务端改密共用同一强度下限(与 routers/auth.py 的 len<6 一致)
+    password: str = Field(min_length=6)
     nickname: Optional[str] = None
     email: Optional[str] = None
     phone: Optional[str] = None

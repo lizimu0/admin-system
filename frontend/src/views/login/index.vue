@@ -17,7 +17,7 @@ const captchaId = ref('')
 
 const form = reactive({
   username: 'admin',
-  password: 'admin123',
+  password: '',
   captcha_code: ''
 })
 
@@ -82,7 +82,7 @@ onMounted(refreshCaptcha)
         </el-button>
       </el-form>
       <div class="tips">
-        演示账号: admin / admin123(管理员)· test / test123(普通用户)
+        演示账号: admin(管理员)· test(普通用户)<br />初始密码见种子脚本输出,或在 backend/.env 中通过 ADMIN_INITIAL_PASSWORD 设置
       </div>
     </div>
   </div>
